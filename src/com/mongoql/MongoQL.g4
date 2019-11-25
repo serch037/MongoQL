@@ -13,9 +13,11 @@ fromClause: 'FROM' WS collection;
 collection: ID;
 
 whereClause: WS 'WHERE' WS exprList;
-exprList: expr (',' (WS)? exprList)?;
-expr: field (WS)? operator (WS)? value;
-operator: '=' | '!=' | '<' | '<=' | '>' | '>=';
+exprList: expr (WS logOp WS exprList)?
+    | '(' exprList ')';
+expr: field (WS)? relOp (WS)? value;
+logOp: 'AND' | 'OR';
+relOp: '=' | '!=' | '<' | '<=' | '>' | '>=';
 value: STRING | NUMBER | boolean;
 boolean: 'TRUE' | 'FALSE';
 
