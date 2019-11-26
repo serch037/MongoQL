@@ -1,4 +1,4 @@
-// Generated from D:/Documents/ITC/8ITC/Compiladores/MongoQL/src/com/mongoql\MongoQL.g4 by ANTLR 4.7.2
+// Generated from /home/sergio/Documents/Projects/Learning/Antlr/MongoQL/src/com/mongoql/MongoQL.g4 by ANTLR 4.7.2
 package com.mongoql;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -48,6 +48,16 @@ public interface MongoQLListener extends ParseTreeListener {
 	 */
 	void exitProjList(MongoQLParser.ProjListContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MongoQLParser#nestedField}.
+	 * @param ctx the parse tree
+	 */
+	void enterNestedField(MongoQLParser.NestedFieldContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MongoQLParser#nestedField}.
+	 * @param ctx the parse tree
+	 */
+	void exitNestedField(MongoQLParser.NestedFieldContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MongoQLParser#field}.
 	 * @param ctx the parse tree
 	 */
@@ -57,16 +67,6 @@ public interface MongoQLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitField(MongoQLParser.FieldContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MongoQLParser#subfield}.
-	 * @param ctx the parse tree
-	 */
-	void enterSubfield(MongoQLParser.SubfieldContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MongoQLParser#subfield}.
-	 * @param ctx the parse tree
-	 */
-	void exitSubfield(MongoQLParser.SubfieldContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MongoQLParser#fromClause}.
 	 * @param ctx the parse tree
@@ -98,6 +98,26 @@ public interface MongoQLListener extends ParseTreeListener {
 	 */
 	void exitWhereClause(MongoQLParser.WhereClauseContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MongoQLParser#orderByClause}.
+	 * @param ctx the parse tree
+	 */
+	void enterOrderByClause(MongoQLParser.OrderByClauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MongoQLParser#orderByClause}.
+	 * @param ctx the parse tree
+	 */
+	void exitOrderByClause(MongoQLParser.OrderByClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MongoQLParser#orderByOpt}.
+	 * @param ctx the parse tree
+	 */
+	void enterOrderByOpt(MongoQLParser.OrderByOptContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MongoQLParser#orderByOpt}.
+	 * @param ctx the parse tree
+	 */
+	void exitOrderByOpt(MongoQLParser.OrderByOptContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MongoQLParser#exprList}.
 	 * @param ctx the parse tree
 	 */
@@ -118,15 +138,25 @@ public interface MongoQLListener extends ParseTreeListener {
 	 */
 	void exitExpr(MongoQLParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MongoQLParser#operator}.
+	 * Enter a parse tree produced by {@link MongoQLParser#logOp}.
 	 * @param ctx the parse tree
 	 */
-	void enterOperator(MongoQLParser.OperatorContext ctx);
+	void enterLogOp(MongoQLParser.LogOpContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MongoQLParser#operator}.
+	 * Exit a parse tree produced by {@link MongoQLParser#logOp}.
 	 * @param ctx the parse tree
 	 */
-	void exitOperator(MongoQLParser.OperatorContext ctx);
+	void exitLogOp(MongoQLParser.LogOpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MongoQLParser#relOp}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelOp(MongoQLParser.RelOpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MongoQLParser#relOp}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelOp(MongoQLParser.RelOpContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MongoQLParser#value}.
 	 * @param ctx the parse tree

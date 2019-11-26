@@ -1,4 +1,4 @@
-// Generated from D:/Documents/ITC/8ITC/Compiladores/MongoQL/src/com/mongoql\MongoQL.g4 by ANTLR 4.7.2
+// Generated from /home/sergio/Documents/Projects/Learning/Antlr/MongoQL/src/com/mongoql/MongoQL.g4 by ANTLR 4.7.2
 package com.mongoql;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -35,17 +35,17 @@ public interface MongoQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProjList(MongoQLParser.ProjListContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MongoQLParser#nestedField}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNestedField(MongoQLParser.NestedFieldContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MongoQLParser#field}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitField(MongoQLParser.FieldContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MongoQLParser#subfield}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSubfield(MongoQLParser.SubfieldContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MongoQLParser#fromClause}.
 	 * @param ctx the parse tree
@@ -65,6 +65,18 @@ public interface MongoQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhereClause(MongoQLParser.WhereClauseContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MongoQLParser#orderByClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrderByClause(MongoQLParser.OrderByClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MongoQLParser#orderByOpt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrderByOpt(MongoQLParser.OrderByOptContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MongoQLParser#exprList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -77,11 +89,17 @@ public interface MongoQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr(MongoQLParser.ExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MongoQLParser#operator}.
+	 * Visit a parse tree produced by {@link MongoQLParser#logOp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOperator(MongoQLParser.OperatorContext ctx);
+	T visitLogOp(MongoQLParser.LogOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MongoQLParser#relOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelOp(MongoQLParser.RelOpContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MongoQLParser#value}.
 	 * @param ctx the parse tree
