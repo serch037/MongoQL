@@ -11,12 +11,13 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        String input = "SELECT a.b, c.d, f FROM movies WHERE a.b <= 10 OR c.d = 2;";
+        String input = "SELECT a.b, c.d.e, f, z FROM movies WHERE e.f <= z.d OR g.h = 2 AND (a != 'b' OR z < 10 OR f = TRUE OR t = FALSE AND ((x < y) OR (f < d)));";
         MongoQLLexer lexer = new MongoQLLexer(CharStreams.fromString(input));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MongoQLParser parser = new MongoQLParser(tokens);
         ParseTree tree = parser.query();
-        MongoQLBaseVisitor
+        MyVisitor visitor = new MyVisitor();
+        visitor.visit(tree);
         // write your code here
     }
 }

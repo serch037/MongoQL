@@ -16,12 +16,12 @@ collection: ID;
 
 whereClause: WS? 'WHERE' WS? exprList;
 exprList:
-    '(' WS? exprList WS? ')' (WS? logOp WS? exprList)?|
-    expr (WS? logOp WS? exprList)?
+    '(' WS? exprList WS? ')' (WS? LOGOP WS? exprList)?|
+    expr (WS? LOGOP WS? exprList)?
     ;
-expr: nestedField (WS)? relOp (WS)? value;
-logOp: 'AND' | 'OR';
-relOp: '=' | '!=' | '<' | '<=' | '>' | '>=';
+expr: nestedField (WS)? RELOP (WS)? value;
+LOGOP: 'AND' | 'OR';
+RELOP: '=' | '!=' | '<' | '<=' | '>' | '>=';
 value: NUMBER|BOOLEAN|STRING|nestedField;
 
 orderByClause: WS? 'ORDER BY' WS? field (WS?) (orderByOpt)?;
