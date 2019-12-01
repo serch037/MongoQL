@@ -89,6 +89,12 @@ public interface MongoQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOrderByClause(MongoQLParser.OrderByClauseContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MongoQLParser#orderByFields}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrderByFields(MongoQLParser.OrderByFieldsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MongoQLParser#orderByOpt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

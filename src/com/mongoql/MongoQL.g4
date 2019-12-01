@@ -1,30 +1,35 @@
 grammar MongoQL;
 query: selectClause
         fromClause
-        (whereClause)? (orderByClause)? (WS)? ';';
-WS : (' ' | '\t' | '\r' | '\n') {skip();};
+        whereClause
+        orderByClause';';
 //WS : [ \t\r\n]+ -> skip ;
 
 selectClause: 'SELECT' WS? projAttrs WS?;
 projAttrs: projList | '*';
-projList: nestedField (',' (WS)? projList)?;
+projList: nestedField (','  projList)?;
 nestedField: field '.' nestedField | field;
 field: ID;
 
-fromClause: 'FROM' WS? collection;
+fromClause: 'FROM' collection;
 collection: ID;
 
-whereClause: WS? 'WHERE' WS? exprList;
-exprList:
-    '(' WS? exprList WS? ')' (WS? LOGOP WS? exprList)?|
-    expr (WS? LOGOP WS? exprList)?
+whereClause: ('WHERE' exprList)?;
+exprList
+    : '(' exprList ')'
+    | exprList 'AND' exprList
+    | exprList 'OR' exprList
+    | expr
     ;
-expr: nestedField (WS)? RELOP (WS)? value;
-LOGOP: 'AND' | 'OR';
+expr: nestedField  RELOP value;
+//LOGOP: 'AND' | 'OR';
 RELOP: '=' | '!=' | '<' | '<=' | '>' | '>=';
 value: NUMBER|BOOLEAN|STRING|nestedField;
 
-orderByClause: WS? 'ORDER BY' WS? field (WS?) (orderByOpt)?;
+orderByClause: ('ORDER BY' orderByFields)?;
+orderByFields
+    : nestedField (orderByOpt)? ',' orderByFields
+    | nestedField (orderByOpt)? ;
 orderByOpt: ('ASC'|'DESC');
 
 NUMBER: [0-9]+;
@@ -36,4 +41,4 @@ STRING:
 
 ID : ('a'..'z' | 'A'..'Z') ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*;
 CHARACTER: ('a'..'z' | 'A'..'Z' | '0'..'9' | '_' );
-
+WS: [ \t\n\r]+ -> skip ; // toss out all whitespace
