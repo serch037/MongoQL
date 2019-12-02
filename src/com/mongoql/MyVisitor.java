@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.*;
 
 
 public class MyVisitor extends MongoQLBaseVisitor {
@@ -19,7 +20,7 @@ public class MyVisitor extends MongoQLBaseVisitor {
     MongoDatabase database;
 
     MyVisitor() {
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://USER:PASS@mflix-fomos.mongodb.net/test?retryWrites=true&w=majority");
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://user:pass@mflix-fomos.mongodb.net/test?retryWrites=true&w=majority");
         database = mongoClient.getDatabase("sample_mflix");
     }
 
@@ -29,9 +30,13 @@ public class MyVisitor extends MongoQLBaseVisitor {
 //        MongoCollection<Document> collection= database.getCollection("movies");
         queryOBJ.fromField = (String) visit(ctx.fromClause());
         queryOBJ.projectionFields = (Bson) visit(ctx.selectClause());
-        var tmpWhere = visit(ctx.whereClause());
-        if (tmpWhere != null) {
-            queryOBJ.whereConditions = (Bson) visit(ctx.whereClause());
+        var tmpClause = visit(ctx.whereClause());
+        if (tmpClause != null) {
+            queryOBJ.whereConditions = (Bson) tmpClause;
+        }
+        tmpClause = visit(ctx.orderByClause());
+        if (tmpClause != null) {
+            queryOBJ.orderByCondition = (Bson) tmpClause;
         }
         queryOBJ.doQuery();
         System.out.println("Done");
@@ -53,9 +58,11 @@ public class MyVisitor extends MongoQLBaseVisitor {
 
     @Override
     public Object visitSelectClause(MongoQLParser.SelectClauseContext ctx) {
-        System.out.println(visit(ctx.projAttrs()));
-        return fields(excludeId(), include((List<String>) visit(ctx.projAttrs())));
-//        return super.visitSelectClause(ctx);
+        System.out.println(ctx.projAttrs().getText());
+        if (!ctx.projAttrs().getText().equals("*")) {
+            return fields(excludeId(), include((List<String>) visit(ctx.projAttrs())));
+        }
+        return null;
     }
 
 
@@ -141,8 +148,7 @@ public class MyVisitor extends MongoQLBaseVisitor {
     @Override
     public Object visitOrderByClause(MongoQLParser.OrderByClauseContext ctx) {
         if (ctx.orderByFields() != null) {
-//            System.out.println(visit(ctx.orderByFields()));
-            return String.format("{%s}", visit(ctx.orderByFields()));
+            return orderBy((List<? extends Bson>) visit(ctx.orderByFields()));
         }
         return super.visitOrderByClause(ctx);
     }
@@ -150,15 +156,15 @@ public class MyVisitor extends MongoQLBaseVisitor {
     @Override
     public Object visitOrderByFields(MongoQLParser.OrderByFieldsContext ctx) {
         OrderByClause oc = new OrderByClause();
+        ArrayList<Bson> conditions = new ArrayList<>();
         oc.field = visit(ctx.nestedField()).toString();
         oc.desc = ctx.orderByOpt() != null && ctx.orderByOpt().getText().equals("DESC");
+        conditions.add(oc.toBson());
 
         if (ctx.orderByFields() != null) {
-            String nested = visit(ctx.orderByFields()).toString();
-            return String.format("%s,%s", oc, nested);
-        } else {
-            return oc.toString();
+            conditions.addAll((Collection<? extends Bson>) visit(ctx.orderByFields()));
         }
+        return conditions;
     }
 }
 

@@ -1,21 +1,34 @@
 package com.mongoql;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 import org.bson.Document;
 import org.bson.io.BsonOutput;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Sorts.*;
 
 public class QueryOBJ {
     String fromField;
     Bson projectionFields;
     Bson whereConditions;
-    String orderByCondition;
+    Bson orderByCondition;
     MongoDatabase database;
+    public static void parse(String query) {
+        MongoQLLexer lexer = new MongoQLLexer(CharStreams.fromString(query));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        MongoQLParser parser = new MongoQLParser(tokens);
+        ParseTree tree = parser.query();
+        MyVisitor visitor = new MyVisitor();
+        visitor.visit(tree);
+    }
 
     public QueryOBJ(MongoDatabase database) {
         this.database = database;
@@ -23,17 +36,29 @@ public class QueryOBJ {
 
     public void doQuery() {
         MongoCollection<Document> collection = database.getCollection(fromField);
-        MongoCursor<Document> cursor = null;
+        MongoCursor<Document> cursorIterator = null;
+        FindIterable<Document> cursor = null;
+        // where Transform
         if (this.whereConditions == null) {
-            cursor = collection.find().projection(this.projectionFields).iterator();
+            cursor = collection.find();
         } else {
-            cursor = collection.find(this.whereConditions).projection(this.projectionFields).iterator();
+            cursor = collection.find(this.whereConditions);
         }
+
+        // select transform
+        if (this.projectionFields != null) {
+            cursor = cursor.projection(this.projectionFields);
+        }
+
+        if (this.orderByCondition != null) {
+            cursor = cursor.sort(this.orderByCondition);
+        }
+        cursorIterator = cursor.iterator();
 //        cursor = collection.find(eq("runtime", 90)).projection(this.projectionFields).iterator();
-        while (cursor.hasNext()) {
-            System.out.println(cursor.next());
-        }
         System.out.println("Printing " + database + " " + projectionFields + " " + whereConditions + " " + orderByCondition);
+        while (cursorIterator.hasNext()) {
+            System.out.println(cursorIterator.next());
+        }
     }
 }
 
@@ -127,6 +152,14 @@ class OrderByClause {
     @Override
     public String toString() {
         return String.format("%s:%s", field, !desc ? 1 : -1);
+    }
+
+    public Bson toBson(){
+       if (desc){
+           return descending(field);
+       } else {
+           return ascending(field);
+       }
     }
 }
 

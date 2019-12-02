@@ -6,7 +6,8 @@ query: selectClause
 //WS : [ \t\r\n]+ -> skip ;
 
 selectClause: 'SELECT' WS? projAttrs WS?;
-projAttrs: projList | '*';
+projAttrs
+    : projList | '*';
 projList: nestedField (','  projList)?;
 nestedField: field '.' nestedField | field;
 field: ID;
